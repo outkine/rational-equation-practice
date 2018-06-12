@@ -64,6 +64,7 @@
     let currentProblem 
 
     function selectProblem(i) {
+      calc.setBlank()
       currentProblem = problems[i]
       Array.from(tocEl.children).forEach((el) => el.className = '')
       tocEl.children[i].className = 'active'
@@ -111,7 +112,6 @@
     }
 
     function withinRange(target, guess) {
-      console.log(target, guess)
       return (target >= guess - .5) && (target <= guess + .5)
     }
 
