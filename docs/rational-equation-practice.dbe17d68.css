@@ -36,7 +36,44 @@ a {
     color: #fffdf3;
     background: black; }
 
-#calculator {
+#key {
   border: 2px solid black;
-  padding: 0 10px;
-  font-size: 20px; }
+  margin: 10px;
+  display: flex; }
+  #key * {
+    margin-left: 30px; }
+  #key .green:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: green;
+    position: absolute;
+    transform: translateX(-15px);
+    margin: auto; }
+  #key .yellow:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: yellow;
+    position: absolute;
+    transform: translateX(-15px);
+    margin: auto; }
+  #key .red:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: red;
+    position: absolute;
+    transform: translateX(-15px);
+    margin: auto; }
+  #key .blue:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: blue;
+    position: absolute;
+    transform: translateX(-15px);
+    margin: auto; }
+
+#calculator {
+  border: 2px solid black; }

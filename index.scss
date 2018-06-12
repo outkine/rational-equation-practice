@@ -2,6 +2,10 @@ $white: #fffdf3;
 
 @mixin border {
   border: 2px solid black;
+}
+
+@mixin button {
+  @include border;
   padding: 0 10px;
   font-size: 20px;
 }
@@ -16,7 +20,7 @@ input {
   font-family: Vollkorn;
   margin-top: 10px;
   background: none;
-  @include border;
+  @include button;
 }
 
 .header {
@@ -27,7 +31,7 @@ input {
 a {
   text-decoration: none;
   color: black;
-  @include border;
+  @include button;
 }
 
 .table-of-contents {
@@ -39,13 +43,46 @@ a {
   }
 
   p {
-    @include border;
+    @include button;
     margin: 0 10px;
   }
 
   .active {
     color: $white;
     background: black;
+  }
+}
+
+@mixin box($color) {
+  &:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: $color;
+    position: absolute;
+    transform: translateX(-15px);
+    margin: auto;
+  }
+}
+
+#key {
+  @include border;
+  margin: 10px;
+  display: flex;
+  * {
+    margin-left: 30px;
+  }
+  .green {
+    @include box(green);
+  }
+  .yellow {
+    @include box(yellow);
+  }
+  .red {
+    @include box(red);
+  }
+  .blue {
+    @include box(blue);
   }
 }
 

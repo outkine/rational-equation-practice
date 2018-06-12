@@ -15,15 +15,24 @@
       <p onclick="selectProblem(3)">3</p>
       <p onclick="selectProblem(4)">4</p>
       <p onclick="selectProblem(5)">5</p>
-      <p onclick="selectProblem(6)">6</p>
-      <p onclick="selectProblem(7)">7</p>
     </div>
     <div>
       <a href="./index.html">home</a>
     </div>
   </div>
+  <div id="key">
+    <p><b>key:</b></p>
+    <p class="red">x-intercept</p>
+    <p class="yellow">y-intercept</p>
+    <p class="green">horizontal-asymptote</p>
+    <p class="blue">vertical-asymptote</p>
+  </div>
   <div id="calculator" style="width: 600px; height: 400px;"></div>
-  <input id="input">
+  <div id="input">
+      <input placeholder="numerator">
+      <br>
+      <input placeholder="denominator">
+  </div>
   <button id="submit" onclick="submit()">submit</button>
   <p id="result"></p>
 
@@ -36,27 +45,82 @@
 
     let calc = Desmos.GraphingCalculator(calcEl, { expressions: false, border: false })
 
-    const problems = [
+  const problems = [
       {
-        formula: 'x^2',
+        formula: '\\frac{(x+2)^3}{(x-1)^2}',
         type: 'graph',
         points: [
           {
-            type: 'xIntercept',
+            type: 'x-intercept',
             y: 0,
+            answer: 2,
+          },
+          {
+            type: 'horizontal-asymptote',
+            x: 0,
             answer: 3,
           },
         ],
       },
       {
-        formula: 'x^2',
+        formula: '\\frac{(x+2)^3}{(x-1)^2}',
+        type: 'graph',
+        points: [
+          {
+            type: 'x-intercept',
+            y: 0,
+            answer: -2,
+          },
+          {
+            type: 'y-intercept',
+            x: 0,
+            answer: 8,
+          },
+          {
+            type: 'vertical-asymptote',
+            y: 0,
+            answer: 1,
+          },
+        ],
+      },
+      {
+        formula: '\\frac{(x-3)(x+5)^2}{(x+2)^2(x-3)(x-1)}',
+        type: 'graph',
+        points: [
+          {
+            type: 'horizontal-asymptote',
+            x: 0,
+            answer: 0,
+          },
+          {
+            type: 'vertical-asymptote',
+            y: 0,
+            answer: 1,
+          },
+          {
+            type: 'vertical-asymptote',
+            y: 0,
+            answer: -2,
+          },
+        ],
+      },
+      {
+        formula: '\\frac{x}{(x-1)(x-2)^2}',
+        type: 'guess',
+      },
+      {
+        formula: '\\frac{(x+6)^2}{(x+6)(x-1)}',
+        type: 'guess',
+      },
+      {
+        formula: '\\frac{(x+3)^3(x-1)}{(x-2)^2}',
         type: 'guess',
       },
     ]
 
     const COLORS = {
-      'xIntercept': 'red',
-      'yIntercept': 'yellow',
+      'x-intercept': 'red',
+      'y-intercept': 'yellow',
       'horizontal-asymptote': 'green',
       'vertical-asymptote': 'blue',
     }
@@ -91,7 +155,7 @@
     function submit() {
       let success 
       if (currentProblem.type === 'guess') {
-        if (input.value === currentProblem.formula) success = true
+        if (`\\frac{${inputEl.children[0].value}}{${inputEl.children[2].value}}` === currentProblem.formula) success = true
       } else {
         success = true 
         for (let i = 0; i < currentProblem.points.length; i++) {
