@@ -106,14 +106,26 @@
       },
       {
         formula: '\\frac{x}{(x-1)(x-2)^2}',
+        answers: [
+        '\\frac{x}{(x-2)^2(x-1)}',
+        '\\frac{x}{(x-1)(x-2)^2}',
+        ],
         type: 'guess',
       },
       {
         formula: '\\frac{(x+6)^2}{(x+6)(x-1)}',
         type: 'guess',
+        answers: [
+        '\\frac{(x+6)^2}{(x+6)(x-1)}',
+        '\\frac{(x+6)^2}{(x-1)(x+6)}',
+        ],
       },
       {
         formula: '\\frac{(x+3)^3(x-1)}{(x-2)^2}',
+        answers: [
+        '\\frac{(x+3)^3(x-1)}{(x-2)^2}',
+        '\\frac{(x-1)(x+3)^3}{(x-2)^2}',
+        ],
         type: 'guess',
       },
     ]
@@ -155,7 +167,9 @@
     function submit() {
       let success 
       if (currentProblem.type === 'guess') {
-        if (`\\frac{${inputEl.children[0].value}}{${inputEl.children[2].value}}` === currentProblem.formula) success = true
+        for (let equation of currentProblem.answers) {
+          if (`\\frac{${inputEl.children[0].value}}{${inputEl.children[2].value}}` === equation) success = true
+        }
       } else {
         success = true 
         for (let i = 0; i < currentProblem.points.length; i++) {
