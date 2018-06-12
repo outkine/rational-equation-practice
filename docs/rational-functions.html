@@ -13,7 +13,7 @@
     <div class="header">
       <div class="table-of-contents">
         <p v-for="(problem, index) in completed" @click="selectProblem(index)" :class="{ active: index === currentProblemIndex }">
-          {{ index }}
+          {{ index + 1 }}
         </p>
       </div>
       <div>
