@@ -66,6 +66,7 @@ a {
 }
 
 #key {
+  display: inline-block;
   @include border;
   margin: 10px;
   display: flex;
