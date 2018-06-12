@@ -13,6 +13,7 @@ $white: #fffdf3;
 body {
   font-family: Vollkorn;
   background: $white;
+  margin: 0 20vw;
 }
 
 button,
@@ -27,6 +28,11 @@ input {
 .header {
   display: flex;
   justify-content: space-between;
+
+  .home {
+    display: flex;
+    align-items: center;
+  }
 }
 
 a {

@@ -1,6 +1,7 @@
 body {
   font-family: Vollkorn;
-  background: #fffdf3; }
+  background: #fffdf3;
+  margin: 0 20vw; }
 
 button,
 input {
@@ -15,6 +16,9 @@ input {
 .header {
   display: flex;
   justify-content: space-between; }
+  .header .home {
+    display: flex;
+    align-items: center; }
 
 a {
   text-decoration: none;
