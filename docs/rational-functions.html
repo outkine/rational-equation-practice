@@ -6,6 +6,7 @@
   <link href="https://fonts.googleapis.com/css?family=Vollkorn" rel="stylesheet">
   <link href="/rational-equation-practice.dbe17d68.css" rel="stylesheet">
   <script src="https://unpkg.com/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
 </head>
 <body>
   <div id="app">
@@ -21,11 +22,12 @@
     </div>
     <h1>Directions:</h1>
     <p v-if="currentProblem.type === 'graph'">
-      Identify the features of the following equation: {{ currentProblem.formula }}
+      Identify the features of the following equation:
     </p>
     <p v-else="">
       Write the equation for the following graph (don't include any spaces!).
     </p>
+    <div v-show="currentProblem.type === 'graph'" v-html="`\\begin{equation}${currentProblem.formula} \\end{equation}`"></div>
     <div class="key" v-show="currentProblem.type === 'graph'">
       <p><b>key:</b></p>
       <p class="red">x-intercept</p>
@@ -179,6 +181,9 @@ The best place to start with this function is looking at our zeroes. Firstly, we
       mounted: function () { 
         this.calc = Desmos.GraphingCalculator(this.$refs.calculator, { expressions: false, border: false })
         this.selectProblem(0)
+      },
+      updated: function () {
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub])
       },
       data: {
         completed: new Array(PROBLEMS.length).fill(false),
