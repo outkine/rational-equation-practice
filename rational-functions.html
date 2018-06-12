@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rational Functions</title>
+  <link href="https://fonts.googleapis.com/css?family=Vollkorn" rel="stylesheet">
+  <link href="index.scss" rel="stylesheet">
+</head>
+<body>
+  <div class="header">
+    <div class="table-of-contents">
+      <p onclick="selectProblem(0)">0</p>
+      <p onclick="selectProblem(1)">1</p>
+      <p onclick="selectProblem(2)">2</p>
+      <p onclick="selectProblem(3)">3</p>
+      <p onclick="selectProblem(4)">4</p>
+      <p onclick="selectProblem(5)">5</p>
+      <p onclick="selectProblem(6)">6</p>
+      <p onclick="selectProblem(7)">7</p>
+    </div>
+    <div>
+      <a href="./index.html">home</a>
+    </div>
+  </div>
+  <div id="calculator" style="width: 600px; height: 400px;"></div>
+  <input id="input">
+  <button id="submit" onclick="submit()">submit</button>
+  <p id="result"></p>
+
+  <script src="https://www.desmos.com/api/v1.0/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+  <script>
+    const calcEl = document.getElementById('calculator')
+    const inputEl = document.getElementById('input')
+    const resultEl = document.getElementById('result')
+    const tocEl = document.querySelector('.table-of-contents')
+
+    let calc = Desmos.GraphingCalculator(calcEl, { expressions: false, border: false })
+
+    const problems = [
+      {
+        formula: 'x^2',
+        type: 'graph',
+        points: [
+          {
+            type: 'xIntercept',
+            y: 0,
+            answer: 3,
+          },
+        ],
+      },
+      {
+        formula: 'x^2',
+        type: 'guess',
+      },
+    ]
+
+    const COLORS = {
+      'xIntercept': 'red',
+      'yIntercept': 'yellow',
+      'horizontal-asymptote': 'green',
+      'vertical-asymptote': 'blue',
+    }
+
+    let currentProblem 
+
+    function selectProblem(i) {
+      currentProblem = problems[i]
+      Array.from(tocEl.children).forEach((el) => el.className = '')
+      tocEl.children[i].className = 'active'
+
+      if (problems[i].type === 'guess') {
+        // calc = Desmos.GraphingCalculator(calcEl, { expressions: false })
+        calc.setExpression({ latex: problems[i].formula })
+        inputEl.style.display = 'initial'
+      } else {
+        // calc = Desmos.GraphingCalculator(calcEl, { expressions: false })
+        for (let point of problems[i].points) {
+          let dragMode
+          if (point.x !== undefined) {
+            dragMode = Desmos.DragModes.Y
+          } else {
+            dragMode = Desmos.DragModes.X
+          }
+          calc.setExpression({ latex: '(0, 0)', dragMode, color: COLORS[point.type] })
+        }
+        inputEl.style.display = 'none'
+      }
+    }
+
+    function submit() {
+      let success 
+      if (currentProblem.type === 'guess') {
+        if (input.value === currentProblem.formula) success = true
+      } else {
+        success = true 
+        for (let i = 0; i < currentProblem.points.length; i++) {
+          const rawPoint = calc.getExpressions()[i].latex
+          let guessPoint
+          if (rawPoint === '(0, 0)') guessPoint = [0, 0]
+          else guessPoint = rawPoint.match(/\d+\.?\d*/g).map(i => parseFloat(i))
+          const point = currentProblem.points[i]
+          if (point.y !== undefined) {
+            if (!withinRange(point.answer, guessPoint[0])) success = false
+          } else {
+            if (!withinRAnge(point.answer, guessPoint[1])) success = false
+          } 
+        }
+      }
+      if (success) resultEl.innerHTML = 'success!'
+      else resultEl.innerHTML = 'mistake!'
+    }
+
+    function withinRange(target, guess) {
+      console.log(target, guess)
+      return (target >= guess - .5) && (target <= guess + .5)
+    }
+
+    selectProblem(0)
+  </script>
+</body>
+</html>
+
+

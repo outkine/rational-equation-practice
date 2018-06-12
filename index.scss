@@ -1,0 +1,54 @@
+$white: #fffdf3;
+
+@mixin border {
+  border: 2px solid black;
+  padding: 0 10px;
+  font-size: 20px;
+}
+
+body {
+  font-family: Vollkorn;
+  background: $white;
+}
+
+button,
+input {
+  font-family: Vollkorn;
+  margin-top: 10px;
+  background: none;
+  @include border;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  @include border;
+}
+
+.table-of-contents {
+  display: flex;
+  margin: 10px 0;
+
+  * {
+    user-select: none;
+  }
+
+  p {
+    @include border;
+    margin: 0 10px;
+  }
+
+  .active {
+    color: $white;
+    background: black;
+  }
+}
+
+#calculator {
+  @include border;
+}

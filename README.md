@@ -1,2 +1,2 @@
-# rational-equation-practice
-Jak's Maths help you practice rational equations, and more!
+# immigrant-resources
+A website dedicated to helping immigrants new to the US.
