@@ -23,10 +23,24 @@
         <a href="/index.html">home</a>
       </div>
     </div>
+    <div v-show="introduction ">
+      <p>
+        So, you may be wondering, what is a rational function?
+      </p>
+
+      <p>
+        A rational function is defined as any function which can be defined by a rational fraction. That is to say, rational functions are such that both the numerator and denominator are polynomials. There may also be coefficients in front of said polynomials (these do not need to be rational numbers), that can help us to determine what the horizontal asymptote or holes (if any) a graph may or may not have.
+      </p>
+
+      <p>
+        In this activity, you will work on both graphing key points of rational equations, and finding the equation of a given rational function. Explanations will be provided in case you get stuck, or want to check your work. Do keep in mind that the questions do get more difficult as you continue. Are you ready? Let’s begin!
+      </p>
+      <img src="/meme.efd4215b.jpg">
+    </div>
     <div v-show="!introduction">
       <h1>Directions:</h1>
       <p v-if="currentProblem.type === 'graph'">
-        Identify the features of the following equation:
+        Identify the features of the following equation by dragging the dots to the correct points on the graph.
       </p>
       <p v-else="">
         Write the equation for the following graph (don't include any spaces!).
@@ -54,16 +68,6 @@
       <p>
         {{ showAnswer ? currentProblem.explanation : '' }}
       </p>
-    </div>
-    <div v-show="introduction ">
-      <p>
-        So, you may be wondering, what is a rational function?
-
-        A rational function is defined as any function which can be defined by a rational fraction. That is to say, rational functions are such that both the numerator and denominator are polynomials. There may also be coefficients in front of said polynomials (these do not need to be rational numbers), that can help us to determine what the horizontal asymptote or holes (if any) a graph may or may not have.
-
-        In this activity, you will work on both graphing key points of rational equations, and finding the equation of a given rational function. Explanations will be provided in case you get stuck, or want to check your work. Do keep in mind that the questions do get more difficult as you continue. Are you ready? Let’s begin!
-      </p>
-      <img src="/meme.efd4215b.jpg">
     </div>
   </div>
 
