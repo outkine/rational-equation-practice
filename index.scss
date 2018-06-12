@@ -21,6 +21,7 @@ input {
   margin-top: 10px;
   background: none;
   @include button;
+  user-select: none;
 }
 
 .header {
@@ -65,7 +66,7 @@ a {
   }
 }
 
-#key {
+.key {
   display: inline-block;
   @include border;
   margin: 10px;
@@ -87,6 +88,8 @@ a {
   }
 }
 
-#calculator {
+.calculator {
+  width: 500px;
+  height: 500px;
   @include border;
 }

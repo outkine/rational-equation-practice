@@ -5,49 +5,56 @@
   <title>Rational Functions</title>
   <link href="https://fonts.googleapis.com/css?family=Vollkorn" rel="stylesheet">
   <link href="index.scss" rel="stylesheet">
+  <script src="https://unpkg.com/vue"></script>
 </head>
 <body>
-  <div class="header">
-    <div class="table-of-contents">
-      <p onclick="selectProblem(0)">0</p>
-      <p onclick="selectProblem(1)">1</p>
-      <p onclick="selectProblem(2)">2</p>
-      <p onclick="selectProblem(3)">3</p>
-      <p onclick="selectProblem(4)">4</p>
-      <p onclick="selectProblem(5)">5</p>
+  <div id="app" >
+    <div class="header">
+      <div class="table-of-contents">
+        <p v-for="(problem, index) in completed" @click="selectProblem(index)" :class="{ active: index === currentProblemIndex }">
+          {{ index }}
+        </p>
+      </div>
+      <div>
+        <a href="./index.html">home</a>
+      </div>
     </div>
-    <div>
-      <a href="./index.html">home</a>
+    <h1>Directions:</h1>
+    <p v-if="currentProblem.type === 'graph'">
+      Identify the features of the following equation: {{ currentProblem.formula }}
+    </p>
+    <p v-else>
+      Write the equation for the following graph (don't include any spaces!).
+    </p>
+    <div class="key" v-show="currentProblem.type === 'graph'">
+      <p><b>key:</b></p>
+      <p class="red">x-intercept</p>
+      <p class="yellow">y-intercept</p>
+      <p class="green">horizontal-asymptote</p>
+      <p class="blue">vertical-asymptote</p>
     </div>
-  </div>
-  <div id="key">
-    <p><b>key:</b></p>
-    <p class="red">x-intercept</p>
-    <p class="yellow">y-intercept</p>
-    <p class="green">horizontal-asymptote</p>
-    <p class="blue">vertical-asymptote</p>
-  </div>
-  <div id="calculator" style="width: 600px; height: 400px;"></div>
-  <div id="input">
-      <input placeholder="numerator">
+
+    <div ref="calculator" class="calculator"></div>
+    <div v-show="currentProblem.type === 'guess'">
+      <input placeholder="numerator" v-model="numerator">
       <br>
-      <input placeholder="denominator">
+      <input placeholder="denominator" v-model="denominator">
+    </div>
+    <button class="submit" @click="submit()">submit</button>
+    <button @click="showAnswer = !showAnswer">show explanation</button>
+    <p>
+      <b>{{ success !== null ? (success ? 'success!' : 'mistake!') : '' }}</b>
+    </p>
+    <p>
+      {{ showAnswer ? currentProblem.explanation : '' }}
+    </p>
   </div>
-  <button id="submit" onclick="submit()">submit</button>
-  <p id="result"></p>
 
   <script src="https://www.desmos.com/api/v1.0/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
   <script>
-    const calcEl = document.getElementById('calculator')
-    const inputEl = document.getElementById('input')
-    const resultEl = document.getElementById('result')
-    const tocEl = document.querySelector('.table-of-contents')
-
-    let calc = Desmos.GraphingCalculator(calcEl, { expressions: false, border: false })
-
-  const problems = [
+    const PROBLEMS = [
       {
-        formula: '\\frac{(x+2)^3}{(x-1)^2}',
+        formula: '\\frac{3(x-2)^2}{x^2}',
         type: 'graph',
         points: [
           {
@@ -61,6 +68,11 @@
             answer: 3,
           },
         ],
+        explanation: `
+First, we can start by looking at our numerator to determine our zeroes. Since we are given (x-2), we know that (2, 0) will be a point in the equation when y is equal to zero, and thus will be an x-intercept of the graph. Next, we can check our denominator to see the vertical asymptotes. We are given (x)^2 in the denominator, which tells us that we will have a vertical asymptote as x approaches zero (AKA x = 0). Finally, we can use the degrees of the numerator and denominator respectively to find our horizontal asymptote (and if it exists). Based on the rules of horizontal asymptotes, we know that if the degrees of the numerator and denominator are the same, the horizontal asymptote will be equivalent to the ratio of the coefficients, which in this case, is 3 (3:1). Therefore, our horizontal asymptote is y = 3.
+
+When graphing, it is important to note that our (x-2) in the numerator is squared, which means that the graph will, as approaching the zero (2, 0), dip down and then back up, just like a quadratic equation would look. Then, the function will drastically go up as it approaches x = 0, then go back down and continue to approach y = 3 as the limit of the function approaches infinity and negative infinity.
+        `,
       },
       {
         formula: '\\frac{(x+2)^3}{(x-1)^2}',
@@ -82,6 +94,11 @@
             answer: 1,
           },
         ],
+        explanation: `
+First, we can start by looking at our numerator to determine our zeroes. We are given (x+2) in the numerator, which means that when x = -2, y will be zero, which gives us an x-intercept of (-2, 0). Next, we can check our denominator to see the vertical asymptotes. We are given (x-1)^2 in the denominator, which tells us that a vertical asymptote will appear when x approaches 1. Finally, we can use the degrees of the numerator and denominator respectively to find our horizontal asymptote (and if it exists). Based on the rules of horizontal asymptotes, we know that if the degree of the numerator is greater than that of the denominator, then there will be no horizontal asymptote. Since this holds true here (given that the numerator is to the third degree and the denominator is to the second), there will be no horizontal asymptote.
+
+When graphing this equation, we will see that it resembles a linear function in its long-run behaviour. We know this because when we cancel the degrees of the numerator and denominator, we find that the equation simplifies down to a first degree function, just like a linear function. It is worth noting that close to our zero (-2, 0), the graph will resemble a cubic function because in the equation, (x+2) is to the third power.
+        `
       },
       {
         formula: '\\frac{(x-3)(x+5)^2}{(x+2)^2(x-3)(x-1)}',
@@ -103,6 +120,9 @@
             answer: -2,
           },
         ],
+        explanation: `
+First, we can start by looking at our numerator to determine our zeroes. We are given (x-3) and (x+5) in the numerator, which would suggest that our zeroes are (3, 0) and (-5, 0), as those are the values for x that would give us a zero in the numerator. However, we can also see that (x-3) is present in the denominator as well; because of this, (x-3) is not a zero, but rather a hole. This is because when x = 3, the function becomes 0/0, which is not possible, and thus creates a hole in the graph. Next, looking at our denominator, we see that (x+2) and (x-1) are present, which shows us that when x is near -2 and/or 1, the graph will approach a vertical asymptote. Thus, the vertical asymptotes are x = -2 and x = 1. Finally, we can use the degrees of the numerator and denominator respectively to find our horizontal asymptote (and if it exists). Based on the rules of horizontal asymptotes, we know that if the degree of the numerator is less than that of the denominator, then the horizontal asymptote will be zero. Here, the degree of the numerator is 3 while the denominator is 4, which means our horizontal asymptote will be y = 0.
+`
       },
       {
         formula: '\\frac{x}{(x-1)(x-2)^2}',
@@ -111,6 +131,11 @@
         '\\frac{x}{(x-1)(x-2)^2}',
         ],
         type: 'guess',
+        explanation: `
+At first glance, it would appear that this function has an x-intercept/zero when x is equal to -6. However, if we look at what appears to be our x-intercept, we notice that our value for y is actually undefined, which suggests that there is a hole. Because this is the case, we know that (x+6) must be in both the numerator and denominator because when x=-6, AKA the hole of the graph, (x+6) would equal zero. 
+
+That being said, we can also tell from the graph that there is a vertical asymptote when x = 1. This tell us that (x-1) must be in the denominator because when x = 1, the denominator will be zero, which creates a vertical asymptote. Finally, we can use the rules of horizontal asymptotes to help us determine the degrees of the function. We know that when the numerator and denominator are equal degrees, then the horizontal asymptote will be equivalent to the ratio of coefficients between them. Since our horizontal asymptote is y = 1, we know that the degrees of the function must not only be the same (since 1 could be the ratio between the coefficients of the numerator and denominator, and any other horizontal asymptote rule would not result in a horizontal asymptote of y = 1), and that our coefficients simplify down to one for our numerator and denominator. As such, (x+6) must be squared so that the degrees will be the same.
+`
       },
       {
         formula: '\\frac{(x+6)^2}{(x+6)(x-1)}',
@@ -119,6 +144,11 @@
         '\\frac{(x+6)^2}{(x+6)(x-1)}',
         '\\frac{(x+6)^2}{(x-1)(x+6)}',
         ],
+        explanation: `
+This function seems daunting at first, but when you think about it, it’s really pretty simple. First, let’s start with our zeroes. The only zero we can see is at our origin, (0, 0). There are no holes that we can see on the graph, which means the only variable that will be in our numerator is x. Next, we can check our graph for vertical asymptotes to see what our denominator will be. We can see that when x = 1 and x = 2, there are vertical asymptotes, which suggests that our denominator will have (x-1) and (x-2).
+
+Now, we have to determine the degrees of our function. First, we can see that our horizontal asymptote for the graph is y = 0, which we know, based on the rules of horizontal asymptotes, means that the degree of the denominator must be larger than that of the numerator. We know that this is already the case, given that we have just x in the numerator and (x-1) and (x-2) in the denominator, making the degrees 1 and 2 respectively. However, we can see that based off of the short-run behaviour near the vertical asymptote at x = 2, the function begins to resemble a quadratic. This means that (x-2) should actually be squared.
+`
       },
       {
         formula: '\\frac{(x+3)^3(x-1)}{(x-2)^2}',
@@ -127,6 +157,9 @@
         '\\frac{(x-1)(x+3)^3}{(x-2)^2}',
         ],
         type: 'guess',
+        explanation: `
+The best place to start with this function is looking at our zeroes. Firstly, we can see that our x-intercepts are at (-3, 0) and (1, 0), which tells us that our numerator will be (x+3) and (x-1). Then, we can also look toward our end behaviour of the function to see what our vertical asymptotes will be. It appears that as x approaches 2, the graph drastically declines, suggesting that there is a vertical asymptote there. This means that our denominator will have (x-2), creating the aforementioned vertical asymptote.
+        `
       },
     ]
 
@@ -137,65 +170,83 @@
       'vertical-asymptote': 'blue',
     }
 
-    let currentProblem 
-
-    function selectProblem(i) {
-      calc.setBlank()
-      currentProblem = problems[i]
-      Array.from(tocEl.children).forEach((el) => el.className = '')
-      tocEl.children[i].className = 'active'
-
-      if (problems[i].type === 'guess') {
-        // calc = Desmos.GraphingCalculator(calcEl, { expressions: false })
-        calc.setExpression({ latex: problems[i].formula })
-        inputEl.style.display = 'initial'
-      } else {
-        // calc = Desmos.GraphingCalculator(calcEl, { expressions: false })
-        for (let point of problems[i].points) {
-          let dragMode
-          if (point.x !== undefined) {
-            dragMode = Desmos.DragModes.Y
-          } else {
-            dragMode = Desmos.DragModes.X
-          }
-          calc.setExpression({ latex: '(0, 0)', dragMode, color: COLORS[point.type] })
-        }
-        inputEl.style.display = 'none'
-      }
-    }
-
-    function submit() {
-      let success 
-      if (currentProblem.type === 'guess') {
-        for (let equation of currentProblem.answers) {
-          if (`\\frac{${inputEl.children[0].value}}{${inputEl.children[2].value}}` === equation) success = true
-        }
-      } else {
-        success = true 
-        for (let i = 0; i < currentProblem.points.length; i++) {
-          const rawPoint = calc.getExpressions()[i].latex
-          let guessPoint
-          if (rawPoint === '(0, 0)') guessPoint = [0, 0]
-          else guessPoint = rawPoint.match(/\d+\.?\d*/g).map(i => parseFloat(i))
-          const point = currentProblem.points[i]
-          if (point.y !== undefined) {
-            if (!withinRange(point.answer, guessPoint[0])) success = false
-          } else {
-            if (!withinRange(point.answer, guessPoint[1])) success = false
-          } 
-        }
-      }
-      if (success) resultEl.innerHTML = 'success!'
-      else resultEl.innerHTML = 'mistake!'
-    }
-
     function withinRange(target, guess) {
       return (target >= guess - .5) && (target <= guess + .5)
     }
+    
+    new Vue({
+      el: '#app',
+      mounted: function () { 
+        this.calc = Desmos.GraphingCalculator(this.$refs.calculator, { expressions: false, border: false })
+        this.selectProblem(0)
+      },
+      data: {
+        completed: new Array(PROBLEMS.length).fill(false),
+        currentProblemIndex: 0,
+        success: null,
+        numerator: '',
+        denominator: '',
+        showAnswer: false,
+      },
+      computed: {
+        currentProblem: function () { return PROBLEMS[this.currentProblemIndex] }
+      },
+      methods: {
+        selectProblem: function(i) {
+          this.success = null
+          this.showAnswer = false
+          this.currentProblemIndex = i
+          this.calc.setBlank()
+          if (this.currentProblem.type === 'guess') {
+            this.calc.setExpression({ latex: this.currentProblem.formula })
+          } else {
+            for (let point of this.currentProblem.points) {
+              let dragMode
+              if (point.x !== undefined) {
+                dragMode = Desmos.DragModes.Y
+              } else {
+                dragMode = Desmos.DragModes.X
+              }
+              this.calc.setExpression({ latex: '(0, 0)', dragMode, color: COLORS[point.type] })
+            }
+          }
+        },
+        submit: function() {
+          if (this.currentProblem.type === 'guess') {
+            this.success = false
+            for (let equation of this.currentProblem.answers) {
+              if (`\\frac{${this.numerator}}{${this.denominator}}` === equation) this.success = true
+            }
+          } else {
+            this.success = true
+            let match 
+            for (let point of this.currentProblem.points) {
+              match = false
+              for (let graphPoint of this.calc.getExpressions()) {
+                console.log(point, graphPoint)
+                if (COLORS[point.type] === graphPoint.color) {
+                  const rawPoint = graphPoint.latex
+                  if (rawPoint === '(0, 0)') guessPoint = [0, 0]
+                  else guessPoint = rawPoint.match(/-?\d+\.?\d*/g).map(i => parseFloat(i))
+                    console.log(point.answer, guessPoint)
 
-    selectProblem(0)
+                  if (point.y !== undefined) {
+                    if (withinRange(point.answer, guessPoint[0])) match = true
+                  } else {
+                    if (withinRange(point.answer, guessPoint[1])) match = true
+                  }
+                }
+              }
+              if (!match) {
+                this.success = false 
+                break
+              }
+            }
+          }
+          if (this.success) this.showAnswer = true
+        }
+      }
+    })
   </script>
 </body>
 </html>
-
-
